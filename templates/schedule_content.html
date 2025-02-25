@@ -1,0 +1,115 @@
+<table>
+    <thead>
+        <tr>
+            <th>节次</th>
+            <th>时间</th>
+            <th>周一</th>
+            <th>周二</th>
+            <th>周三</th>
+            <th>周四</th>
+            <th>周五</th>
+            <th>周六</th>
+            <th>周日</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- 上午课程 -->
+        <tr>
+            <td colspan="9" class="section-header">上午</td>
+        </tr>
+        {% for section in schedule.morning %}
+            {% set outer_loop = loop %}
+            {% for i in range(section.span|default(1)) %}
+                <tr>
+                    <td>第{{ outer_loop.index }}节</td>
+                    {% if i == 0 %}
+                        <td>{{ section.time }}</td>
+                        {% for day in range(1, 8) %}
+                            {% set course = namespace(found=false) %}
+                            {% for c in section.courses %}
+                                {% if c.day == day %}
+                                    {% set course.found = true %}
+                                    <td {% if c.span and c.span > 1 %}rowspan="{{ c.span }}"{% endif %}>
+                                        <div class="course-cell">
+                                            <div class="course-name">{{ c.name }}</div>
+                                            <div class="course-location">{{ c.location }}</div>
+                                        </div>
+                                    </td>
+                                {% endif %}
+                            {% endfor %}
+                            {% if not course.found %}
+                                <td class="empty-cell"></td>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        {% endfor %}
+
+        <!-- 下午课程 -->
+        <tr>
+            <td colspan="9" class="section-header">下午</td>
+        </tr>
+        {% for section in schedule.afternoon %}
+            {% set outer_loop = loop %}
+            {% for i in range(section.span|default(1)) %}
+                <tr>
+                    <td>第{{ outer_loop.index + 5 }}节</td>
+                    {% if i == 0 %}
+                        <td>{{ section.time }}</td>
+                        {% for day in range(1, 8) %}
+                            {% set course = namespace(found=false) %}
+                            {% for c in section.courses %}
+                                {% if c.day == day %}
+                                    {% set course.found = true %}
+                                    <td {% if c.span and c.span > 1 %}rowspan="{{ c.span }}"{% endif %}>
+                                        <div class="course-cell">
+                                            <div class="course-name">{{ c.name }}</div>
+                                            <div class="course-location">{{ c.location }}</div>
+                                        </div>
+                                    </td>
+                                {% endif %}
+                            {% endfor %}
+                            {% if not course.found %}
+                                <td class="empty-cell"></td>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        {% endfor %}
+
+        <!-- 晚上课程 -->
+        <tr>
+            <td colspan="9" class="section-header">晚上</td>
+        </tr>
+        {% for section in schedule.evening %}
+            {% set outer_loop = loop %}
+            {% for i in range(section.span|default(1)) %}
+                <tr>
+                    <td>第{{ outer_loop.index + 9 }}节</td>
+                    {% if i == 0 %}
+                        <td>{{ section.time }}</td>
+                        {% for day in range(1, 8) %}
+                            {% set course = namespace(found=false) %}
+                            {% for c in section.courses|default([]) %}
+                                {% if c.day == day %}
+                                    {% set course.found = true %}
+                                    <td {% if c.span and c.span > 1 %}rowspan="{{ c.span }}"{% endif %}>
+                                        <div class="course-cell">
+                                            <div class="course-name">{{ c.name }}</div>
+                                            <div class="course-location">{{ c.location }}</div>
+                                        </div>
+                                    </td>
+                                {% endif %}
+                            {% endfor %}
+                            {% if not course.found %}
+                                <td class="empty-cell"></td>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        {% endfor %}
+    </tbody>
+</table> 

@@ -1,0 +1,248 @@
+:root {
+    --apple-gray: #f5f5f7;
+    --apple-dark: #1d1d1f;
+    --apple-blue: #0066cc;
+    --apple-red: #ff3b30;
+    --apple-highlight: #f0f0f5;
+    --apple-gradient-start: #4CA1AF;
+    --apple-gradient-end: #2C3E50;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "Helvetica Neue", sans-serif;
+    margin: 0;
+    padding: 40px 20px;
+    background: linear-gradient(120deg, var(--apple-gradient-start), var(--apple-gradient-end));
+    color: var(--apple-dark);
+    line-height: 1.5;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+h1 {
+    font-size: 36px;
+    font-weight: 700;
+    text-align: center;
+    margin: 0;
+    padding: 32px 0;
+    color: var(--apple-dark);
+    letter-spacing: -0.5px;
+}
+
+.current-time {
+    text-align: center;
+    padding: 16px;
+    margin: 0 32px 24px;
+    font-size: 18px;
+    color: var(--apple-dark);
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.current-time span {
+    font-weight: 500;
+}
+
+.current-time .time {
+    color: var(--apple-blue);
+    font-size: 24px;
+    font-weight: 600;
+    min-width: 120px;
+}
+
+.schedule-container {
+    padding: 0 32px 32px;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: 0;
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+th, td {
+    padding: 16px;
+    text-align: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    white-space: nowrap;
+}
+
+th {
+    font-weight: 600;
+    background-color: rgba(0, 0, 0, 0.02);
+    color: var(--apple-dark);
+    font-size: 15px;
+}
+
+td {
+    font-size: 14px;
+}
+
+th:first-child, td:first-child {
+    text-align: left;
+    padding-left: 24px;
+    font-weight: 500;
+}
+
+th:nth-child(2), td:nth-child(2) {
+    text-align: left;
+    border-right: 1px solid rgba(0, 0, 0, 0.05);
+    padding-left: 24px;
+}
+
+.section-header {
+    background-color: rgba(0, 0, 0, 0.02);
+    text-align: left;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 12px 24px;
+    color: var(--apple-dark);
+}
+
+.course-cell {
+    background-color: var(--apple-highlight);
+    border-radius: 12px;
+    padding: 16px 12px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin: 4px;
+}
+
+.course-cell:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+}
+
+.course-name {
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: var(--apple-dark);
+}
+
+.course-location {
+    color: var(--apple-red);
+    font-size: 13px;
+    opacity: 0.9;
+}
+
+.empty-cell {
+    background-color: transparent;
+}
+
+.course-cell.current {
+    background-color: var(--apple-blue);
+    color: white;
+    animation: pulse 2s infinite;
+    box-shadow: 0 0 20px rgba(0, 102, 204, 0.3);
+}
+
+.course-cell.current .course-location {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 102, 204, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 15px rgba(0, 102, 204, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 102, 204, 0);
+    }
+}
+
+/* 新增用户切换相关样式 */
+.user-switch {
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 20px;
+}
+
+.user-switch button {
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    padding: 12px 24px;
+    margin: 0 10px;
+    border-radius: 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.user-switch button.active {
+    background: var(--apple-blue);
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 20px 10px;
+    }
+    
+    .container {
+        border-radius: 20px;
+    }
+    
+    h1 {
+        font-size: 28px;
+        padding: 24px 0;
+    }
+    
+    .current-time {
+        margin: 0 16px 16px;
+        padding: 12px;
+        font-size: 14px;
+    }
+    
+    .current-time .time {
+        font-size: 18px;
+    }
+    
+    .schedule-container {
+        padding: 0 16px 16px;
+    }
+    
+    th, td {
+        padding: 12px 8px;
+        font-size: 13px;
+    }
+    
+    .course-cell {
+        padding: 12px 8px;
+    }
+    
+    .course-name {
+        font-size: 13px;
+    }
+    
+    .course-location {
+        font-size: 12px;
+    }
+} 

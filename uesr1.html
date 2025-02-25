@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>国望课程表</title>
+    <style>
+        :root {
+            --apple-gray: #f5f5f7;
+            --apple-dark: #1d1d1f;
+            --apple-blue: #0066cc;
+            --apple-red: #ff3b30;
+            --apple-highlight: #f0f0f5;
+            --apple-gradient-start: #4CA1AF;
+            --apple-gradient-end: #2C3E50;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "Helvetica Neue", sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            background: linear-gradient(120deg, var(--apple-gradient-start), var(--apple-gradient-end));
+            color: var(--apple-dark);
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        
+        h1 {
+            font-size: 36px;
+            font-weight: 700;
+            text-align: center;
+            margin: 0;
+            padding: 32px 0;
+            color: var(--apple-dark);
+            letter-spacing: -0.5px;
+        }
+        
+        .current-time {
+            text-align: center;
+            padding: 16px;
+            margin: 0 32px 24px;
+            font-size: 18px;
+            color: var(--apple-dark);
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .current-time span {
+            font-weight: 500;
+        }
+        
+        .current-time .time {
+            color: var(--apple-blue);
+            font-size: 24px;
+            font-weight: 600;
+            min-width: 120px;
+        }
+        
+        .schedule-container {
+            padding: 0 32px 32px;
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-bottom: 0;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        th, td {
+            padding: 16px;
+            text-align: center;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            white-space: nowrap;
+        }
+        
+        th {
+            font-weight: 600;
+            background-color: rgba(0, 0, 0, 0.02);
+            color: var(--apple-dark);
+            font-size: 15px;
+        }
+        
+        td {
+            font-size: 14px;
+        }
+        
+        th:first-child, td:first-child {
+            text-align: left;
+            padding-left: 24px;
+            font-weight: 500;
+        }
+        
+        th:nth-child(2), td:nth-child(2) {
+            text-align: left;
+            border-right: 1px solid rgba(0, 0, 0, 0.05);
+            padding-left: 24px;
+        }
+        
+        .section-header {
+            background-color: rgba(0, 0, 0, 0.02);
+            text-align: left;
+            font-weight: 600;
+            font-size: 16px;
+            padding: 12px 24px;
+            color: var(--apple-dark);
+        }
+        
+        .course-cell {
+            background-color: var(--apple-highlight);
+            border-radius: 12px;
+            padding: 16px 12px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin: 4px;
+        }
+        
+        .course-cell:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+        }
+        
+        .course-name {
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: var(--apple-dark);
+        }
+        
+        .course-location {
+            color: var(--apple-red);
+            font-size: 13px;
+            opacity: 0.9;
+        }
+        
+        .empty-cell {
+            background-color: transparent;
+        }
+        
+        .course-cell.current {
+            background-color: var(--apple-blue);
+            color: white;
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 20px rgba(0, 102, 204, 0.3);
+        }
+        
+        .course-cell.current .course-location {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(0, 102, 204, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(0, 102, 204, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(0, 102, 204, 0);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 10px;
+            }
+            
+            .container {
+                border-radius: 20px;
+            }
+            
+            h1 {
+                font-size: 28px;
+                padding: 24px 0;
+            }
+            
+            .current-time {
+                margin: 0 16px 16px;
+                padding: 12px;
+                font-size: 14px;
+            }
+            
+            .current-time .time {
+                font-size: 18px;
+            }
+            
+            .schedule-container {
+                padding: 0 16px 16px;
+            }
+            
+            th, td {
+                padding: 12px 8px;
+                font-size: 13px;
+            }
+            
+            .course-cell {
+                padding: 12px 8px;
+            }
+            
+            .course-name {
+                font-size: 13px;
+            }
+            
+            .course-location {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>国望课程表</h1>
+        <div class="current-time">
+            <span>当前时间：</span>
+            <span class="time" id="currentTime"></span>
+            <span>星期</span>
+            <span class="time" id="currentDay"></span>
+        </div>
+        <div class="schedule-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>节次</th>
+                        <th>时间</th>
+                        <th>周一</th>
+                        <th>周二</th>
+                        <th>周三</th>
+                        <th>周四</th>
+                        <th>周五</th>
+                        <th>周六</th>
+                        <th>周日</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="9" class="section-header">上午</td>
+                    </tr>
+                    <tr>
+                        <td>第1节</td>
+                        <td>08:00 - 08:45</td>
+                        <td rowspan="2">
+                            <div class="course-cell">
+                                <div class="course-name">博弈论</div>
+                                <div class="course-location">卓越楼333</div>
+                            </div>
+                        </td>
+                        <td class="empty-cell"></td>
+                        <td rowspan="2">
+                            <div class="course-cell">
+                                <div class="course-name">项目管理</div>
+                                <div class="course-location">国合楼310</div>
+                            </div>
+                        </td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                    </tr>
+                    <tr>
+                        <td>第2节</td>
+                        <td>08:50 - 09:35</td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                    </tr>
+                    <tr>
+                        <td>第3节</td>
+                        <td>09:55 - 10:40</td>
+                        <td rowspan="3">
+                            <div class="course-cell">
+                                <div class="course-name">算法设计与分析</div>
+                                <div class="course-location">一教450</div>
+                            </div>
+                        </td>
+                        <td rowspan="3">
+                            <div class="course-cell">
+                                <div class="course-name">嵌入式系统软件</div>
+                                <div class="course-location">一教146</div>
+                            </div>
+                        </td>
+                        <td rowspan="3">
+                            <div class="course-cell">
+                                <div class="course-name">编译原理</div>
+                                <div class="course-location">一教405</div>
+                            </div>
+                        </td>
+                        <td class="empty-cell"></td>
+                        <td rowspan="3">
+                            <div class="course-cell">
+                                <div class="course-name">系统建模与仿真</div>
+                                <div class="course-location">一教305</div>
+                            </div>
+                        </td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                    </tr>
+                    <tr>
+                        <td>第4节</td>
+                        <td>10:45 - 11:30</td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                    </tr>
+                    <tr>
+                        <td>第5节</td>
+                        <td>11:35 - 12:20</td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="9" class="section-header">下午</td>
+                    </tr>
+                    <tr>
+                        <td>第6节</td>
+                        <td>13:15 - 14:00</td>
+                        <td rowspan="3">
+                            <div class="course-cell">
+                                <div class="course-name">软件测试</div>
+                                <div class="course-location">一教146</div>
+                            </div>
+                        </td>
+                        <td class="empty-cell"></td>
+                        <td rowspan="3">
+                            <div class="course-cell">
+                                <div class="course-name">软件协同设计</div>
+                                <div class="course-location">一教432</div>
+                            </div>
+                        </td>
+                        <td rowspan="3">
+                            <div class="course-cell">
+                                <div class="course-name">深度学习</div>
+                                <div class="course-location">一教116</div>
+                            </div>
+                        </td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                    </tr>
+                    <tr>
+                        <td>第7节</td>
+                        <td>14:05 - 14:50</td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                    </tr>
+                    <tr>
+                        <td>第8节</td>
+                        <td>15:05 - 15:50</td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                    </tr>
+                    <tr>
+                        <td>第9节</td>
+                        <td>15:55 - 16:40</td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="9" class="section-header">晚上</td>
+                    </tr>
+                    <tr>
+                        <td>第10节</td>
+                        <td>18:00 - 18:45</td>
+                        <td class="empty-cell"></td>
+                        <td rowspan="3">
+                            <div class="course-cell">
+                                <div class="course-name">钱钟书作品导读</div>
+                                <div class="course-location">一教150</div>
+                            </div>
+                        </td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                    </tr>
+                    <tr>
+                        <td>第11节</td>
+                        <td>18:50 - 19:35</td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                    </tr>
+                    <tr>
+                        <td>第12节</td>
+                        <td>19:40 - 20:25</td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                        <td class="empty-cell"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        function updateCurrentTime() {
+            const now = new Date();
+            const days = ['日', '一', '二', '三', '四', '五', '六'];
+            
+            // 格式化时间
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            // 更新时间显示
+            document.getElementById('currentTime').textContent = `${hours}:${minutes}:${seconds}`;
+            document.getElementById('currentDay').textContent = days[now.getDay()];
+        }
+
+        function highlightCurrentClass() {
+            // 获取当前时间
+            const now = new Date();
+            const day = now.getDay(); // 0是周日，1-6是周一到周六
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            
+            // 将当前时间转换为分钟数
+            const currentTimeInMinutes = hours * 60 + minutes;
+            
+            // 定义课程时间段（以分钟表示）
+            const timeSlots = [
+                // 上午
+                { start: 8 * 60, end: 8 * 60 + 45, section: 1 },      // 第1节
+                { start: 8 * 60 + 50, end: 9 * 60 + 35, section: 2 }, // 第2节
+                { start: 9 * 60 + 55, end: 10 * 60 + 40, section: 3 }, // 第3节
+                { start: 10 * 60 + 45, end: 11 * 60 + 30, section: 4 }, // 第4节
+                { start: 11 * 60 + 35, end: 12 * 60 + 20, section: 5 }, // 第5节
+                // 下午
+                { start: 13 * 60 + 15, end: 14 * 60, section: 6 },    // 第6节
+                { start: 14 * 60 + 5, end: 14 * 60 + 50, section: 7 }, // 第7节
+                { start: 15 * 60 + 5, end: 15 * 60 + 50, section: 8 }, // 第8节
+                { start: 15 * 60 + 55, end: 16 * 60 + 40, section: 9 }, // 第9节
+                // 晚上
+                { start: 18 * 60, end: 18 * 60 + 45, section: 10 },    // 第10节
+                { start: 18 * 60 + 50, end: 19 * 60 + 35, section: 11 }, // 第11节
+                { start: 19 * 60 + 40, end: 20 * 60 + 25, section: 12 }  // 第12节
+            ];
+            
+            // 移除所有现有的高亮
+            document.querySelectorAll('.course-cell.current').forEach(cell => {
+                cell.classList.remove('current');
+            });
+            
+            // 找到当前时间对应的课程时间段
+            const currentTimeSlot = timeSlots.find(slot => 
+                currentTimeInMinutes >= slot.start && currentTimeInMinutes <= slot.end
+            );
+            
+            if (currentTimeSlot && day > 0 && day < 7) { // 确保是周一到周六
+                // 找到对应节次的所有行
+                const rows = document.querySelectorAll('tbody tr');
+                
+                // 遍历所有行找到目标行
+                for (const row of rows) {
+                    const firstCell = row.querySelector('td');
+                    if (!firstCell) continue;
+                    
+                    // 检查是否是课程行（通过查找"第X节"文本）
+                    const sectionMatch = firstCell.textContent.match(/第(\d+)节/);
+                    if (!sectionMatch) continue;
+                    
+                    const section = parseInt(sectionMatch[1]);
+                    if (section === currentTimeSlot.section) {
+                        // 找到当前星期几的单元格
+                        const targetCell = row.querySelector(`td:nth-child(${day + 2}) .course-cell`);
+                        if (targetCell) {
+                            targetCell.classList.add('current');
+                        }
+                        // 处理跨行的情况
+                        const prevRows = Array.from(rows).slice(0, Array.from(rows).indexOf(row));
+                        for (const prevRow of prevRows.reverse()) {
+                            const prevCell = prevRow.querySelector(`td:nth-child(${day + 2})`);
+                            if (prevCell && prevCell.hasAttribute('rowspan')) {
+                                const courseCell = prevCell.querySelector('.course-cell');
+                                if (courseCell) {
+                                    courseCell.classList.add('current');
+                                }
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
+        // 页面加载时执行
+        updateCurrentTime();
+        highlightCurrentClass();
+        
+        // 每秒更新时间显示
+        setInterval(updateCurrentTime, 1000);
+        // 每分钟更新课程高亮
+        setInterval(highlightCurrentClass, 60000);
+    </script>
+</body>
+</html>
