@@ -1,248 +1,255 @@
-:root {
-    --apple-gray: #f5f5f7;
-    --apple-dark: #1d1d1f;
-    --apple-blue: #0066cc;
-    --apple-red: #ff3b30;
-    --apple-highlight: #f0f0f5;
-    --apple-gradient-start: #4CA1AF;
-    --apple-gradient-end: #2C3E50;
+/* 全局样式重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "Helvetica Neue", sans-serif;
-    margin: 0;
-    padding: 40px 20px;
-    background: linear-gradient(120deg, var(--apple-gradient-start), var(--apple-gradient-end));
-    color: var(--apple-dark);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     line-height: 1.5;
-    min-height: 100vh;
+    color: #333;
+    background-color: #f5f5f5;
 }
 
+/* 容器样式 */
 .container {
-    max-width: 1200px;
+    max-width: 100%;
+    padding: 10px;
     margin: 0 auto;
-    background-color: rgba(255, 255, 255, 0.95);
-    border-radius: 24px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
 }
 
+/* 标题样式 */
 h1 {
-    font-size: 36px;
-    font-weight: 700;
+    font-size: 1.5rem;
     text-align: center;
-    margin: 0;
-    padding: 32px 0;
-    color: var(--apple-dark);
-    letter-spacing: -0.5px;
+    margin: 10px 0;
+    color: #2c3e50;
 }
 
-.current-time {
-    text-align: center;
-    padding: 16px;
-    margin: 0 32px 24px;
-    font-size: 18px;
-    color: var(--apple-dark);
-    background: rgba(255, 255, 255, 0.8);
-    border-radius: 16px;
+/* 用户切换按钮组 */
+.user-switch {
     display: flex;
     justify-content: center;
-    align-items: center;
-    gap: 16px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    gap: 8px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
 }
 
-.current-time span {
-    font-weight: 500;
+.user-switch button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 20px;
+    background-color: #e0e0e0;
+    color: #666;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-.current-time .time {
-    color: var(--apple-blue);
-    font-size: 24px;
-    font-weight: 600;
-    min-width: 120px;
+.user-switch button.active {
+    background-color: #4CAF50;
+    color: white;
 }
 
+/* 当前时间显示 */
+.current-time {
+    text-align: center;
+    margin: 10px 0;
+    font-size: 0.9rem;
+    color: #666;
+    background-color: white;
+    padding: 8px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* 课程表容器 */
 .schedule-container {
-    padding: 0 32px 32px;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+/* 表格样式 */
 table {
     width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    margin-bottom: 0;
-    background: white;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border-collapse: collapse;
+    min-width: 800px;
 }
 
 th, td {
-    padding: 16px;
+    padding: 4px 4px;
     text-align: center;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    white-space: nowrap;
+    border: 1px solid #e0e0e0;
+    font-size: 0.85rem;
+    height: 30px;
+    vertical-align: middle;
+}
+
+tr {
+    line-height: 1.1;
 }
 
 th {
+    background-color: #f8f9fa;
+    color: #2c3e50;
     font-weight: 600;
-    background-color: rgba(0, 0, 0, 0.02);
-    color: var(--apple-dark);
-    font-size: 15px;
+    white-space: nowrap;
+    height: 25px;
 }
 
-td {
-    font-size: 14px;
-}
-
-th:first-child, td:first-child {
-    text-align: left;
-    padding-left: 24px;
-    font-weight: 500;
-}
-
-th:nth-child(2), td:nth-child(2) {
-    text-align: left;
-    border-right: 1px solid rgba(0, 0, 0, 0.05);
-    padding-left: 24px;
-}
-
-.section-header {
-    background-color: rgba(0, 0, 0, 0.02);
-    text-align: left;
-    font-weight: 600;
-    font-size: 16px;
-    padding: 12px 24px;
-    color: var(--apple-dark);
-}
-
+/* 课程单元格基础样式 */
 .course-cell {
-    background-color: var(--apple-highlight);
-    border-radius: 12px;
-    padding: 16px 12px;
+    padding: 2px;
+    border-radius: 4px;
+    background-color: #e3f2fd;
     height: 100%;
+    min-height: 26px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    margin: 4px;
-}
-
-.course-cell:hover {
-    transform: translateY(-2px) scale(1.02);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
 }
 
 .course-name {
     font-weight: 500;
-    margin-bottom: 6px;
-    color: var(--apple-dark);
+    color: #1976d2;
+    margin-bottom: 2px;
 }
 
 .course-location {
-    color: var(--apple-red);
-    font-size: 13px;
-    opacity: 0.9;
+    font-size: 0.75rem;
+    color: #666;
 }
 
-.empty-cell {
-    background-color: transparent;
-}
-
+/* 当前课程高亮样式 */
 .course-cell.current {
-    background-color: var(--apple-blue);
+    background: linear-gradient(135deg, #FF4B4B, #FF6B6B);
+    box-shadow: 0 4px 12px rgba(255, 75, 75, 0.3);
+    transform: scale(1.05);
+    animation: currentCourseGlow 2s infinite;
+    border: 2px solid #FF3333;
+    z-index: 1;
+    position: relative;
+}
+
+.course-cell.current .course-name {
     color: white;
-    animation: pulse 2s infinite;
-    box-shadow: 0 0 20px rgba(0, 102, 204, 0.3);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 
 .course-cell.current .course-location {
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(255,255,255,0.9);
+    font-weight: 500;
 }
 
-@keyframes pulse {
+@keyframes currentCourseGlow {
     0% {
-        box-shadow: 0 0 0 0 rgba(0, 102, 204, 0.4);
+        box-shadow: 0 4px 12px rgba(255, 75, 75, 0.3);
     }
-    70% {
-        box-shadow: 0 0 0 15px rgba(0, 102, 204, 0);
+    50% {
+        box-shadow: 0 4px 20px rgba(255, 75, 75, 0.6);
     }
     100% {
-        box-shadow: 0 0 0 0 rgba(0, 102, 204, 0);
+        box-shadow: 0 4px 12px rgba(255, 75, 75, 0.3);
     }
 }
 
-/* 新增用户切换相关样式 */
-.user-switch {
-    text-align: center;
-    margin-bottom: 20px;
-    padding: 20px;
+.empty-cell {
+    background-color: #fafafa;
+    height: 30px;
 }
 
-.user-switch button {
-    background: rgba(255, 255, 255, 0.9);
-    border: none;
-    padding: 12px 24px;
-    margin: 0 10px;
-    border-radius: 20px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+.section-header {
+    background-color: #f1f8e9;
+    color: #33691e;
+    font-weight: 600;
+    height: 25px;
 }
 
-.user-switch button.active {
-    background: var(--apple-blue);
-    color: white;
-    box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
-}
-
-@media (max-width: 768px) {
-    body {
-        padding: 20px 10px;
-    }
-    
+/* 响应式设计 */
+@media screen and (max-width: 768px) {
     .container {
-        border-radius: 20px;
+        padding: 5px;
     }
     
     h1 {
-        font-size: 28px;
-        padding: 24px 0;
+        font-size: 1.2rem;
+    }
+    
+    .user-switch button {
+        padding: 6px 10px;
+        font-size: 0.85rem;
     }
     
     .current-time {
-        margin: 0 16px 16px;
-        padding: 12px;
-        font-size: 14px;
-    }
-    
-    .current-time .time {
-        font-size: 18px;
-    }
-    
-    .schedule-container {
-        padding: 0 16px 16px;
+        font-size: 0.8rem;
     }
     
     th, td {
-        padding: 12px 8px;
-        font-size: 13px;
-    }
-    
-    .course-cell {
-        padding: 12px 8px;
+        padding: 6px 3px;
+        font-size: 0.75rem;
     }
     
     .course-name {
-        font-size: 13px;
+        font-size: 0.75rem;
     }
     
     .course-location {
-        font-size: 12px;
+        font-size: 0.7rem;
     }
+    
+    .course-cell.current .course-name {
+        font-size: 0.8rem;
+    }
+}
+
+/* 添加滚动提示 */
+.schedule-container::after {
+    content: '← 左右滑动查看更多 →';
+    display: block;
+    text-align: center;
+    padding: 8px;
+    color: #666;
+    font-size: 0.8rem;
+    background-color: rgba(255,255,255,0.9);
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+/* 优化触摸滚动体验 */
+@media (hover: none) {
+    .schedule-container {
+        cursor: grab;
+    }
+    
+    .schedule-container:active {
+        cursor: grabbing;
+    }
+}
+
+/* 添加滚动条样式 */
+.schedule-container::-webkit-scrollbar {
+    height: 6px;
+}
+
+.schedule-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.schedule-container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+}
+
+.schedule-container::-webkit-scrollbar-thumb:hover {
+    background: #666;
 } 
