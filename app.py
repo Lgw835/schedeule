@@ -218,7 +218,7 @@ schedules = {
                         'name': '深度学习',
                         'location': '一教116',
                         'day': 4,
-                        'span': 3
+                        'span': 2
                     }
                 ]
             },
