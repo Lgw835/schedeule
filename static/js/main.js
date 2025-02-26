@@ -63,8 +63,8 @@ function highlightCurrentClass() {
     }));
 
     // 移除所有现有的高亮
-    document.querySelectorAll('.course-cell.current').forEach(cell => {
-        cell.classList.remove('current');
+    document.querySelectorAll('.course-cell.current, .course-cell.upcoming, .course-cell.soon').forEach(cell => {
+        cell.classList.remove('current', 'upcoming', 'soon');
         cell.style.animation = '';
     });
 
@@ -111,18 +111,36 @@ function highlightCurrentClass() {
         }
         
         if (courseStartSlot && courseEndSlot) {
-            const courseStartTime = courseStartSlot.startMinutes - 5;
-            const courseEndTime = courseEndSlot.endMinutes + 5;
+            const courseStartTime = courseStartSlot.startMinutes;
+            const courseEndTime = courseEndSlot.endMinutes;
+            const upcomingStartTime = courseStartTime - 5; // 提前5分钟高亮红色
+            const soonStartTime = courseStartTime - 30; // 提前30分钟高亮绿色
             
-            if (cellDay === currentDay - 1 && 
-                currentTimeInMinutes >= courseStartTime && 
-                currentTimeInMinutes <= courseEndTime) {
-                
-                cell.classList.add('current');
-                cell.style.animation = 'none';
-                cell.offsetHeight;
-                cell.style.animation = 'pulse 2s infinite';
-                cell.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            if (cellDay === currentDay - 1) {
+                // 当前正在进行的课程
+                if (currentTimeInMinutes >= courseStartTime && currentTimeInMinutes <= courseEndTime) {
+                    cell.classList.add('current');
+                    cell.style.animation = 'none';
+                    cell.offsetHeight;
+                    cell.style.animation = 'pulse 2s infinite';
+                    cell.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                // 即将开始的课程（提前5分钟高亮红色）
+                else if (currentTimeInMinutes >= upcomingStartTime && currentTimeInMinutes < courseStartTime) {
+                    cell.classList.add('upcoming');
+                    cell.style.animation = 'none';
+                    cell.offsetHeight;
+                    cell.style.animation = 'pulse 2s infinite';
+                    cell.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                // 即将开始的课程（提前30分钟高亮绿色）
+                else if (currentTimeInMinutes >= soonStartTime && currentTimeInMinutes < upcomingStartTime) {
+                    cell.classList.add('soon');
+                    cell.style.animation = 'none';
+                    cell.offsetHeight;
+                    cell.style.animation = 'pulse 2s infinite';
+                    cell.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
             }
         }
     });
